@@ -10,7 +10,7 @@ def create_app():
     app = Flask(__name__)
 
     # configuration variable to our app
-    app.config['SQLALCHEMY_DATABASE_URI'] = getenv('DATABSE_URI')
+    app.config['SQLALCHEMY_DATABASE_URI'] = getenv('DATABASE_URI')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Connect our database to the app object
