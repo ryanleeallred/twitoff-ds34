@@ -1,35 +1,36 @@
 from flask_sqlalchemy import SQLAlchemy
 
-
-# Create a DB Object
+# creating the database and connecting to it.
 DB = SQLAlchemy()
-
-# Create a table with a specific schema
-# we will do that by creating a python class.
 
 
 class User(DB.Model):
-    # Two columns inside of our user table
-    # ID Column Schema
-    id = DB.Column(DB.BigInteger, primary_key=True, nullable=False)
-    # username Column schema
+    # id
+    id = DB.Column(DB.BigInteger, primary_key=True)
+    # username
     username = DB.Column(DB.String, nullable=False)
-    # Tweets list is created by the .relationshipo and backref in the Tweets class
-    # tweets = []
+    # tweets
+    # tweets = (comes from DB.backref)
+    # newest tweet id
     newest_tweet_id = DB.Column(DB.BigInteger)
+
+    def __repr__(self):
+        return f"<User: {self.username}>"
 
 
 class Tweet(DB.Model):
-    # ID Column Schema
-    id = DB.Column(DB.BigInteger, primary_key=True, nullable=False)
-    # Text Column Schema
-    text = DB.Column(DB.Unicode(300), nullable=False)
-    # User Column Schema (Secondary / Foreign Key)
+    # id
+    id = DB.Column(DB.BigInteger, primary_key=True)
+    # text
+    text = DB.Column(DB.Unicode(300))
+    # user_id
     user_id = DB.Column(DB.BigInteger, DB.ForeignKey(
         'user.id'), nullable=False)
-    # Set up a relationship between the tweets and the uses
-    # Will automatically create the one-to-many relationship, but also add a new attribute
-    # onto the "User" called "tweets" which will be a list of all of the user tweets
-    user = DB.relationship("User", backref=DB.backref('tweets'), lazy=True)
-    # Word Embeddings Vector Storage (vect for short)
+    # user
+    # Going to add an attribute to both tables (User and Tweet)
+    user = DB.relationship('User', backref=DB.backref('tweets', lazy=True))
+    # place to store our word embeddings "vectorization"
     vect = DB.Column(DB.PickleType, nullable=False)
+
+    def __repr__(self):
+        return f"<Tweet: {self.text}>"
